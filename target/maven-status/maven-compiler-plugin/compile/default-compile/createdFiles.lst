@@ -1,6 +1,0 @@
-com/securekube/dto/HealthResponse.class
-com/securekube/dto/VersionResponse.class
-com/securekube/dto/GreetingResponse.class
-com/securekube/SecureKubeApplication.class
-com/securekube/controller/ApiController.class
-com/securekube/exception/GlobalExceptionHandler.class

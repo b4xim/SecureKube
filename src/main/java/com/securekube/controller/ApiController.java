@@ -26,7 +26,7 @@ public class ApiController {
     @GetMapping("/hello")
     public ResponseEntity<GreetingResponse> hello() {
         log.info("GET /api/hello");
-        return ResponseEntity.ok(new GreetingResponse("Hello from SecureKube!"));
+        return ResponseEntity.ok(new GreetingResponse("Greetings from SecureKube!"));
     }
 
     @GetMapping("/version")

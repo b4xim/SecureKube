@@ -22,7 +22,7 @@ class ApiControllerTest {
         mockMvc.perform(get("/api/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message").value("Hello from SecureKube!"));
+                .andExpect(jsonPath("$.message").value("Greetings from SecureKube!"));
     }
 
     @Test

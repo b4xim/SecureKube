@@ -26,13 +26,13 @@ pipeline{
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker Image..'
-                sh 'docker build -t securekube:latest .'
+                sh "docker build -t securekube:${BUILD_NUMBER} ."
             }
         }
         stage('Scan Docker Image') {
             steps {
                 echo 'Scanning Docker Image..'
-                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image securekube:latest'
+                sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image securekube:${BUILD_NUMBER}"
             }
         }
         stage('Push to Nexus') {
@@ -48,9 +48,9 @@ pipeline{
                 echo "$NEXUS_PASSWORD" | docker login 172.31.38.62:8082 \
                     -u "$NEXUS_USERNAME" --password-stdin
 
-                docker tag securekube:latest 172.31.38.62:8082/securekube:latest
+                docker tag securekube:${BUILD_NUMBER} 172.31.38.62:8082/securekube:${BUILD_NUMBER}
 
-                docker push 172.31.38.62:8082/securekube:latest
+                docker push 172.31.38.62:8082/securekube:${BUILD_NUMBER}
             '''
         }
     }

@@ -35,6 +35,26 @@ pipeline{
                 sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image securekube:latest'
             }
         }
+        stage('Push to Nexus') {
+    steps {
+        echo 'Pushing Docker Image to Nexus..'
+
+        withCredentials([usernamePassword(
+            credentialsId: 'nexus-credentials',
+            usernameVariable: 'NEXUS_USERNAME',
+            passwordVariable: 'NEXUS_PASSWORD'
+        )]) {
+            sh '''
+                echo "$NEXUS_PASSWORD" | docker login 172.31.38.62:8082 \
+                    -u "$NEXUS_USERNAME" --password-stdin
+
+                docker tag securekube:latest 172.31.38.62:8082/securekube:latest
+
+                docker push 172.31.38.62:8082/securekube:latest
+            '''
+        }
+    }
+}
     }
 } 
 

@@ -29,7 +29,12 @@ pipeline{
                 sh 'docker build -t securekube:latest .'
             }
         }
-
+        stage('Scan Docker Image') {
+            steps {
+                echo 'Scanning Docker Image..'
+                sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image securekube:latest'
+            }
+        }
     }
-}
+} 
 

@@ -23,7 +23,13 @@ pipeline{
                 }
             }
         }
-        
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker Image..'
+                sh 'docker build -t securekube:latest .'
+            }
+        }
+
     }
 }
 

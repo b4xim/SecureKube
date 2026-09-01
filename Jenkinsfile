@@ -34,6 +34,7 @@ pipeline{
                 echo 'Scanning Docker Image..'
                 sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image securekube:${BUILD_NUMBER}"
             }
+            
         }
         stage('Push to Nexus') {
     steps {

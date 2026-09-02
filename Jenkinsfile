@@ -37,14 +37,16 @@ pipeline{
             
         }
         stage('Push to Nexus') {
-    steps {
-        echo 'Pushing Docker Image to Nexus..'
+            steps {
+                echo 'Pushing Docker Image to Nexus..'
 
-        withCredentials([usernamePassword(
-            credentialsId: 'nexus-credentials',
-            usernameVariable: 'NEXUS_USERNAME',
-            passwordVariable: 'NEXUS_PASSWORD'
-        )]) {
+                withCredentials([usernamePassword(
+                credentialsId: 'nexus-credentials',
+                usernameVariable: 'NEXUS_USERNAME',
+                passwordVariable: 'NEXUS_PASSWORD'
+                )
+            ]
+        ) {
             sh '''
                 echo "$NEXUS_PASSWORD" | docker login 172.31.38.62:8082 \
                     -u "$NEXUS_USERNAME" --password-stdin
@@ -54,6 +56,20 @@ pipeline{
                 docker push 172.31.38.62:8082/securekube:${BUILD_NUMBER}
             '''
         }
+    }
+}
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes..'
+
+            sh '''
+                kubectl --kubeconfig=/var/lib/jenkins/kubeconfig \
+                 -n securekube set image deployment/securekube-api \
+                 securekube-api=172.31.38.62:8082/securekube:${BUILD_NUMBER}
+
+                kubectl --kubeconfig=/var/lib/jenkins/kubeconfig \
+                -n securekube rollout status deployment/securekube-api
+            '''
     }
 }
     }
